@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+// 保存下client_redriect_url
+let client_redriect_url = ''
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', {
@@ -17,6 +19,7 @@ router.get('/oauth2/authorize', function (req, res, next) {
   console.log(req.query)
   res.setHeader('access-control-allow-origin', '*')
   // res.send(req.query.state)
+  client_redriect_url = req.query.redriect_uri
   let websiteName = req.query.client_id
   let infoRange = req.query.scope
   let resHtml = `<div>网站${websiteName}将获得你的${infoRange}</div><div>是否同意？</div>`
@@ -31,7 +34,7 @@ router.get('/confirm', function (req, res, next) {
   console.log(req.query)
   if (req.query.username === 'test') {
     res.send({
-      uri: 'http://localhost:8080/#/welcome',
+      uri: client_redriect_url,// 'http://localhost:8080/#/welcome',
       // 一个Authorization Code对应一个重定向URI和client_id
       code: 't1e2s3t4',
       state: 'test state'
