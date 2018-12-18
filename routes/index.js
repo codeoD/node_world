@@ -1,15 +1,16 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express')
+var router = express.Router()
 
 // 保存下client_redriect_url
+/* eslint-disable-next-line */
 let client_redriect_url = ''
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', {
     title: 'Express'
-  });
-  //res.send('buh')
-});
+  })
+  // res.send('buh')
+})
 
 router.get('/abc', function (req, res, next) {
   res.send('abc')
@@ -19,6 +20,7 @@ router.get('/oauth2/authorize', function (req, res, next) {
   console.log(req.query)
   res.setHeader('access-control-allow-origin', '*')
   // res.send(req.query.state)
+  /* eslint-disable-next-line */
   client_redriect_url = req.query.redriect_uri
   let websiteName = req.query.client_id
   let infoRange = req.query.scope
@@ -27,14 +29,14 @@ router.get('/oauth2/authorize', function (req, res, next) {
     title: websiteName,
     info: infoRange
   })
-  //res.send('http://localhost:3000')
+  // res.send('http://localhost:3000')
 })
 
 router.get('/confirm', function (req, res, next) {
   console.log(req.query)
   if (req.query.username === 'test') {
     res.send({
-      uri: client_redriect_url,// 'http://localhost:8080/#/welcome',
+      uri: client_redriect_url, // 'http://localhost:8080/#/welcome',
       // 一个Authorization Code对应一个重定向URI和client_id
       code: 't1e2s3t4',
       state: 'test state'
@@ -79,4 +81,17 @@ router.get('/user/get_user_info', function (req, res, next) {
   }
 })
 
-module.exports = router;
+router.get('/login/token', (req, res, next) => {
+  res.setHeader('access-control-allow-origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT')
+  console.log(req)
+  console.log(req.body)
+  console.log(req.query)
+  if (req.query.username === 'my@email.com') {
+    res.send({
+      access_token: 'myToken',
+      refresh_token: 'myRefreshToken'
+    })
+  }
+})
+module.exports = router
